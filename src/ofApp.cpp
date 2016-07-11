@@ -30,7 +30,12 @@ void ofApp::setup() {
 	kinect2.init();
 	kinect2.open();
 #endif
-	
+
+    serial.setup("/dev/tty.usbserial-A70060V8", 115200);
+    serial.startContinuousRead(false);
+    ofAddListener(serial.NEW_MESSAGE, this, &testApp::onNewSerialLine);
+    serline = "";
+    
 	colorImg.allocate(kinect.width, kinect.height);
 	grayImage.allocate(kinect.width, kinect.height);
 	grayThreshNear.allocate(kinect.width, kinect.height);
@@ -148,6 +153,28 @@ void ofApp::draw() {
 	ofDrawBitmapString(reportStream.str(), 20, 652);
     
 }
+
+void ofApp::onNewSerialLine(string &line)
+{
+    ofLogNotice() << "onNewSerialLine, message: " << line << "\n";
+
+    vector<string> input = ofSplitString(line, ",");
+    string msgtype = input.at(0);
+    
+    if(msgtype == "GPSL") {
+        gps.lat = ofToFloat( input.at(1) );
+        gps.lon = ofToFloat( input.at(2) );
+    } else if (msgtype == "GPSQ") {
+        gps.fix = ofToInt( input.at(1) );
+        gps.quality = ofToInt( input.at(2) );
+        gps.satelites = ofToInt( input.at(3) );
+    } else if(msgtype == "IMU") {
+        imu.yaw = ofToFloat( input.at(1) );
+        imu.pitch = ofToFloat( input.at(2) );
+        imu.roll = ofToFloat( input.at(2) );
+    }
+}
+
 
 void ofApp::savePointCloud() {
     // save pintcloud
