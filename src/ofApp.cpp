@@ -156,19 +156,22 @@ void ofApp::draw() {
 
 void ofApp::onNewSerialLine(string &line)
 {
-    ofLogNotice() << "onNewSerialLine, message: " << line << "\n";
+    ofLogNotice() << "onNewSerialLine, message: " << line << endl;
 
     vector<string> input = ofSplitString(line, ",");
     string msgtype = input.at(0);
     
     if(msgtype == "GPSL") {
+        ofLogNotice() << "GPSL line found" << endl;
         gps.lat = ofToFloat( input.at(1) );
         gps.lon = ofToFloat( input.at(2) );
     } else if (msgtype == "GPSQ") {
+        ofLogNotice() << "GPSQ line found" << endl;
         gps.fix = ofToInt( input.at(1) );
         gps.quality = ofToInt( input.at(2) );
         gps.satelites = ofToInt( input.at(3) );
     } else if(msgtype == "IMU") {
+        ofLogNotice() << "IMU line found" << endl;
         imu.yaw = ofToFloat( input.at(1) );
         imu.pitch = ofToFloat( input.at(2) );
         imu.roll = ofToFloat( input.at(2) );

@@ -19,6 +19,7 @@
 		534839911D10C2C7009B85FE /* liblas.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 534839881D10C2C7009B85FE /* liblas.3.dylib */; };
 		534839921D10C2C7009B85FE /* liblas.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 534839891D10C2C7009B85FE /* liblas.dylib */; };
 		534839961D10C2C7009B85FE /* ofxLidar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5348398E1D10C2C7009B85FE /* ofxLidar.cpp */; };
+		5396F67A1D33BAC10020572D /* ofxSimpleSerial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5396F66F1D33BAC10020572D /* ofxSimpleSerial.cpp */; };
 		63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6151136D101F857DAE12722 /* ofxCvImage.cpp */; };
 		686B0DF6249B52E1A85B39EC /* ofxKinect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7ED9FFC7D08DA194C2CE7D09 /* ofxKinect.cpp */; };
 		7ADB04AF67C568EAFAEBA546 /* ofxKinectExtras.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01438542609FC64F1EC60EEB /* ofxKinectExtras.cpp */; };
@@ -210,6 +211,9 @@
 		5348398C1D10C2C7009B85FE /* liblas_c.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = liblas_c.dylib; sourceTree = "<group>"; };
 		5348398E1D10C2C7009B85FE /* ofxLidar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxLidar.cpp; sourceTree = "<group>"; };
 		5348398F1D10C2C7009B85FE /* ofxLiDAR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxLiDAR.h; sourceTree = "<group>"; };
+		5396F66F1D33BAC10020572D /* ofxSimpleSerial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSimpleSerial.cpp; sourceTree = "<group>"; };
+		5396F6701D33BAC10020572D /* ofxSimpleSerial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSimpleSerial.h; sourceTree = "<group>"; };
+		5396F67B1D33C67B0020572D /* Telemetry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Telemetry.h; sourceTree = "<group>"; };
 		56ED74AD5FC73867F5E046F0 /* photo_c.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = photo_c.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/photo/photo_c.h; sourceTree = SOURCE_ROOT; };
 		586A8EC141BDFA82B3B0518C /* config.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = config.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/config.h; sourceTree = SOURCE_ROOT; };
 		59570D160E1EDD6EB832826A /* frame_source.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = frame_source.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/videostab/frame_source.hpp; sourceTree = SOURCE_ROOT; };
@@ -787,6 +791,24 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		5396F6491D33BAC10020572D /* ofxSimpleSerial */ = {
+			isa = PBXGroup;
+			children = (
+				5396F66E1D33BAC10020572D /* src */,
+			);
+			name = ofxSimpleSerial;
+			path = addons/ofxSimpleSerial;
+			sourceTree = "<group>";
+		};
+		5396F66E1D33BAC10020572D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				5396F66F1D33BAC10020572D /* ofxSimpleSerial.cpp */,
+				5396F6701D33BAC10020572D /* ofxSimpleSerial.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		65726280742CD54BF368BDB8 /* libusb-1.0 */ = {
 			isa = PBXGroup;
 			children = (
@@ -798,6 +820,7 @@
 		6948EE371B920CB800B5AC1A /* local_addons */ = {
 			isa = PBXGroup;
 			children = (
+				5396F6491D33BAC10020572D /* ofxSimpleSerial */,
 			);
 			name = local_addons;
 			sourceTree = "<group>";
@@ -1071,6 +1094,7 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
+				5396F67B1D33C67B0020572D /* Telemetry.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1265,6 +1289,7 @@
 				D3301F6A0B43BB293ED97C1D /* ofxCvShortImage.cpp in Sources */,
 				169D3C72FDE6C5590A1616F5 /* ofxCvFloatImage.cpp in Sources */,
 				E212C821D1064B92DD953A42 /* ofxCvHaarFinder.cpp in Sources */,
+				5396F67A1D33BAC10020572D /* ofxSimpleSerial.cpp in Sources */,
 				250A95BA26587BE85DB0A353 /* ofxCvColorImage.cpp in Sources */,
 				530A10DE1D116FEE0004CC3C /* README.md in Sources */,
 				1D5F3298C2FA073628012944 /* ofxCvContourFinder.cpp in Sources */,
