@@ -41,6 +41,9 @@ void ofApp::setup() {
     ofAddListener(serial.NEW_MESSAGE, this, &ofApp::onNewSerialLine);
     serline = "";
     
+    gps.lat = settings.getValue("settings:lastKnownPosition:lat", 0.0);
+    gps.lon = settings.getValue("settings:lastKnownPosition:lon", 0.0);
+    
 	colorImg.allocate(kinect.width, kinect.height);
 	grayImage.allocate(kinect.width, kinect.height);
 	grayThreshNear.allocate(kinect.width, kinect.height);
@@ -129,6 +132,16 @@ void ofApp::draw() {
 		kinect2.draw(420, 320, 400, 300);
 #endif
 	}
+
+//    ofEnableDepthTest();
+//    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_BACK);
+    
+    // draw cube
+    ofPushMatrix();
+    ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2, 300);
+    ofBoxPrimitive(40,20,40).getMesh().drawWireframe();
+    ofPopMatrix();
 	
 	// draw instructions
 	ofSetColor(255, 255, 255);
