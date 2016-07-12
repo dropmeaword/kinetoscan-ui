@@ -4,6 +4,7 @@
 #include "ofxOpenCv.h"
 #include "ofxKinect.h"
 //#include "ofxOSXBoost.h"
+#include "ofxXmlSettings.h"
 #include "ofxLiDAR.h"
 #include "ofxSimpleSerial.h"
 #include "telemetry.h"
@@ -52,6 +53,8 @@ public:
 
     ofxSimpleSerial	serial;
     string serline;
+    
+    ofxXmlSettings settings;
     
 #ifdef USE_TWO_KINECTS
 	ofxKinect kinect2;

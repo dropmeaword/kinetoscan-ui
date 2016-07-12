@@ -1,0 +1,5 @@
+<settings>
+    <baudrate>115200</baudrate>
+    <serial>/dev/tty.wchusbserial1410</serial>
+</settings>
+

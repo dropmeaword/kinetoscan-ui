@@ -3,6 +3,9 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
 	ofSetLogLevel(OF_LOG_VERBOSE);
+    
+    ofLogNotice() << "Loading config from settings.xml";
+    settings.loadFile("settings.xml");
 
     ofLogNotice() << ofxLiDAR::getLibLASVersion();
     recorder.create("lidar.las");
@@ -31,9 +34,11 @@ void ofApp::setup() {
 	kinect2.open();
 #endif
 
-    serial.setup("/dev/tty.usbserial-A70060V8", 115200);
+    string serialdev = settings.getValue("settings:serial", "/dev/tty.wchusbserial1410");
+    int baudrate     = settings.getValue("settings:baudrate", 115200);
+    serial.setup(serialdev, baudrate);
     serial.startContinuousRead(false);
-    ofAddListener(serial.NEW_MESSAGE, this, &testApp::onNewSerialLine);
+    ofAddListener(serial.NEW_MESSAGE, this, &ofApp::onNewSerialLine);
     serline = "";
     
 	colorImg.allocate(kinect.width, kinect.height);
@@ -156,25 +161,41 @@ void ofApp::draw() {
 
 void ofApp::onNewSerialLine(string &line)
 {
-    ofLogNotice() << "onNewSerialLine, message: " << line << endl;
+//    ofLogNotice() << "onNewSerialLine, message: " << line << endl;
 
     vector<string> input = ofSplitString(line, ",");
     string msgtype = input.at(0);
     
     if(msgtype == "GPSL") {
-        ofLogNotice() << "GPSL line found" << endl;
-        gps.lat = ofToFloat( input.at(1) );
-        gps.lon = ofToFloat( input.at(2) );
+        if( input.size() == 3) {
+            ofLogNotice() << "GPSL line found";
+            gps.lat = ofToFloat( input.at(1) );
+            gps.lon = ofToFloat( input.at(2) );
+        } else {
+            ofLogNotice() << "ignored GPS reading: " << line;
+        }
     } else if (msgtype == "GPSQ") {
-        ofLogNotice() << "GPSQ line found" << endl;
-        gps.fix = ofToInt( input.at(1) );
-        gps.quality = ofToInt( input.at(2) );
-        gps.satelites = ofToInt( input.at(3) );
+        if( input.size() == 4) {
+            ofLogNotice() << "GPSQ line found";
+            gps.fix = ofToInt( input.at(1) );
+            gps.quality = ofToInt( input.at(2) );
+            gps.satelites = ofToInt( input.at(3) );
+        } else {
+            ofLogNotice() << "ignored GPS reading: " << line;
+        }
     } else if(msgtype == "IMU") {
-        ofLogNotice() << "IMU line found" << endl;
-        imu.yaw = ofToFloat( input.at(1) );
-        imu.pitch = ofToFloat( input.at(2) );
-        imu.roll = ofToFloat( input.at(2) );
+        if( input.size() == 4) {
+            imu.yaw = ofToFloat( input.at(1) );
+            imu.pitch = ofToFloat( input.at(2) );
+            imu.roll = ofToFloat( input.at(3) );
+        } else {
+            ofLogNotice() << "rejected IMU reading: " << line;
+        }
+
+//        ofLogNotice() << "IMU line found";
+//        for ( std::vector<std::string>::iterator it=input.begin(); it<input.end(); it++) {
+//            std::cout << ' ' << *it;
+//        }
     }
 }
 
