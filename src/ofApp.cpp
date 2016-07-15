@@ -63,6 +63,18 @@ void ofApp::setup() {
     bSavePointCloud = false;
     
     iSaveIndex = 0;
+    
+    int capms = 1000 / SCAN_FREQUENCY_HZ;
+    ofLogNotice() << "Capturing a 3D scan every " << capms << "ms";
+    capture.setup( capms );
+    capture.start(true);
+    ofAddListener( capture.TIMER_COMPLETE , this, &ofApp::timerScanCallback );
+}
+
+void ofApp::timerScanCallback( int &args )
+{
+    bSavePointCloud = true;
+    //ofLogNotice() << "Capturing 3D scan " << ofGetElapsedTimeMillis();
 }
 
 //--------------------------------------------------------------
@@ -71,6 +83,7 @@ void ofApp::update() {
 	ofBackground(100, 100, 100);
 	
 	kinect.update();
+    capture.update();
 	
 	// there is a new frame and we are connected
 	if(kinect.isFrameNew()) {

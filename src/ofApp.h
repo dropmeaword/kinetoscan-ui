@@ -8,6 +8,8 @@
 #include "ofxLiDAR.h"
 #include "ofxSimpleSerial.h"
 #include "telemetry.h"
+#include "ofxSimpleTimer.h"
+
 
 // Windows users:
 // You MUST install the libfreenect kinect drivers in order to be able to use
@@ -23,6 +25,10 @@
 // and/or uninstall/reinstall it in Device Manager.
 //
 // No way around the Windows driver dance, sorry.
+
+
+#define SCAN_FREQUENCY_HZ 4   // how many scans per second do we do?
+
 
 class ofApp : public ofBaseApp {
 public:
@@ -44,6 +50,7 @@ public:
 	void windowResized(int w, int h);
     
     void onNewSerialLine(string &message);
+    void timerScanCallback( int &args );
 	
 	ofxKinect kinect;
     //ofxLiDARRecorder recorder;
@@ -63,6 +70,8 @@ public:
     
     TeleGPS gps;
     TeleIMU imu;
+    
+    ofxSimpleTimer capture;
 	
 	bool bThreshWithOpenCV;
 	bool bDrawPointCloud;
