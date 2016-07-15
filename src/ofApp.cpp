@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include <iomanip>
 
 //--------------------------------------------------------------
 void ofApp::setup() {
@@ -7,8 +8,8 @@ void ofApp::setup() {
     ofLogNotice() << "Loading config from settings.xml";
     settings.loadFile("settings.xml");
 
-    ofLogNotice() << ofxLiDAR::getLibLASVersion();
-    recorder.create("lidar.las");
+    //ofLogNotice() << ofxLiDAR::getLibLASVersion();
+    //recorder.create("lidar.las");
     
 	// enable depth->video image calibration
 	kinect.setRegistration(true);
@@ -29,16 +30,14 @@ void ofApp::setup() {
 		ofLogNotice() << "zero plane dist: " << kinect.getZeroPlaneDistance() << "mm";
 	}
 	
-#ifdef USE_TWO_KINECTS
-	kinect2.init();
-	kinect2.open();
-#endif
-
     string serialdev = settings.getValue("settings:serial", "/dev/tty.wchusbserial1410");
     int baudrate     = settings.getValue("settings:baudrate", 115200);
     serial.setup(serialdev, baudrate);
-    serial.startContinuousRead(false);
-    ofAddListener(serial.NEW_MESSAGE, this, &ofApp::onNewSerialLine);
+    if(serial.isInitialized()) {
+        ofLogNotice() << "Serial was initialized ok, setting callback.";
+        serial.startContinuousRead(false);
+        ofAddListener(serial.NEW_MESSAGE, this, &ofApp::onNewSerialLine);
+    }
     serline = "";
     
     gps.lat = settings.getValue("settings:lastKnownPosition:lat", 0.0);
@@ -60,7 +59,10 @@ void ofApp::setup() {
 	kinect.setCameraTiltAngle(angle);
 	
 	// start from the front
-	bDrawPointCloud = false;
+	bDrawPointCloud = true;
+    bSavePointCloud = false;
+    
+    iSaveIndex = 0;
 }
 
 //--------------------------------------------------------------
@@ -105,10 +107,6 @@ void ofApp::update() {
 		// also, find holes is set to true so we will get interior contours as well....
 		contourFinder.findContours(grayImage, 10, (kinect.width*kinect.height)/2, 20, false);
 	}
-	
-#ifdef USE_TWO_KINECTS
-	kinect2.update();
-#endif
 }
 
 //--------------------------------------------------------------
@@ -127,11 +125,7 @@ void ofApp::draw() {
 		
 		grayImage.draw(10, 320, 400, 300);
 		contourFinder.draw(10, 320, 400, 300);
-		
-#ifdef USE_TWO_KINECTS
-		kinect2.draw(420, 320, 400, 300);
-#endif
-	}
+    }
 
 //    ofEnableDepthTest();
 //    glEnable(GL_CULL_FACE);
@@ -240,16 +234,20 @@ void ofApp::drawPointCloud() {
 	mesh.drawVertices();
 	ofDisableDepthTest();
 	ofPopMatrix();
+    
+    stringstream ss;
+    
+    if(bSavePointCloud) {
+        ss << "mesh-" << setfill('0') << setw(5) << iSaveIndex++;
+        mesh.save("saved-");
+        bSavePointCloud = false;
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
 	kinect.setCameraTiltAngle(0); // zero the tilt on exit
 	kinect.close();
-	
-#ifdef USE_TWO_KINECTS
-	kinect2.close();
-#endif
 }
 
 //--------------------------------------------------------------
@@ -258,7 +256,11 @@ void ofApp::keyPressed (int key) {
 		case ' ':
 			bThreshWithOpenCV = !bThreshWithOpenCV;
 			break;
-			
+
+        case's':
+            bSavePointCloud = !bSavePointCloud;
+            break;
+
 		case'p':
 			bDrawPointCloud = !bDrawPointCloud;
 			break;

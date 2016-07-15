@@ -24,9 +24,6 @@
 //
 // No way around the Windows driver dance, sorry.
 
-// uncomment this to read from two kinects simultaneously
-//#define USE_TWO_KINECTS
-
 class ofApp : public ofBaseApp {
 public:
 	
@@ -49,17 +46,13 @@ public:
     void onNewSerialLine(string &message);
 	
 	ofxKinect kinect;
-    ofxLiDARRecorder recorder;
+    //ofxLiDARRecorder recorder;
 
     ofxSimpleSerial	serial;
     string serline;
     
     ofxXmlSettings settings;
     
-#ifdef USE_TWO_KINECTS
-	ofxKinect kinect2;
-#endif
-	
 	ofxCvColorImage colorImg;
 	
 	ofxCvGrayscaleImage grayImage; // grayscale depth image
@@ -73,9 +66,13 @@ public:
 	
 	bool bThreshWithOpenCV;
 	bool bDrawPointCloud;
+    
+    bool bSavePointCloud;
 	
 	int nearThreshold;
 	int farThreshold;
+    
+    int iSaveIndex;
 	
 	int angle;
 	
