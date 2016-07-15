@@ -238,8 +238,9 @@ void ofApp::drawPointCloud() {
     stringstream ss;
     
     if(bSavePointCloud) {
-        ss << "mesh-" << setfill('0') << setw(5) << iSaveIndex++;
-        mesh.save("saved-");
+        ss << "mesh-" << setfill('0') << setw(5) << iSaveIndex++ << ".ply";
+        mesh.save(ss.str(), true);
+        ofLogNotice() << "saved mesh to " << ss.str();
         bSavePointCloud = false;
     }
 }

@@ -1,3 +1,6 @@
+bin/data/*.mlp
+bin/data/*.ply
+
 # Compiled Object files
 *.slo
 *.lo
