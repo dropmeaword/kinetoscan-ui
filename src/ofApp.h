@@ -5,7 +5,7 @@
 #include "ofxKinect.h"
 //#include "ofxOSXBoost.h"
 #include "ofxXmlSettings.h"
-#include "ofxLiDAR.h"
+//#include "ofxLiDAR.h"
 #include "ofxSimpleSerial.h"
 #include "telemetry.h"
 #include "ofxSimpleTimer.h"
