@@ -3,13 +3,11 @@
 #include "ofMain.h"
 #include "ofxOpenCv.h"
 #include "ofxKinect.h"
-//#include "ofxOSXBoost.h"
 #include "ofxXmlSettings.h"
-//#include "ofxLiDAR.h"
 #include "ofxSimpleSerial.h"
 #include "telemetry.h"
 #include "ofxSimpleTimer.h"
-
+#include "ofxGui.h"
 
 // Windows users:
 // You MUST install the libfreenect kinect drivers in order to be able to use
@@ -38,8 +36,13 @@ public:
 	void draw();
 	void exit();
 	
+    void initUI();
+
 	void drawPointCloud();
     void savePointCloud();
+    void drawComments();
+    
+    void drawBoundingBox();
 	
 	void keyPressed(int key);
 	void mouseDragged(int x, int y, int button);
@@ -51,7 +54,7 @@ public:
     
     void onNewSerialLine(string &message);
     void timerScanCallback( int &args );
-	
+    
 	ofxKinect kinect;
     //ofxLiDARRecorder recorder;
 
@@ -77,6 +80,8 @@ public:
 	bool bDrawPointCloud;
     
     bool bSavePointCloud;
+    
+    bool bHideUI;
 	
 	int nearThreshold;
 	int farThreshold;
@@ -84,6 +89,22 @@ public:
     int iSaveIndex;
 	
 	int angle;
+    
+        
+    ofxToggle scanning;
+    ofxFloatSlider width;
+    ofxFloatSlider height;
+    ofxFloatSlider depth;
+
+//    ofxColorSlider color;
+//    ofxVec2Slider center;
+//    ofxIntSlider circleResolution;
+//    ofxButton twoCircles;
+//    ofxButton ringButton;
+//    ofxLabel screenSize;
+    
+    ofxPanel gui;
+
 	
 	// used for viewing the point cloud
 	ofEasyCam easyCam;

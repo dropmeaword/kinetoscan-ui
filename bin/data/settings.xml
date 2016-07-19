@@ -1,9 +1,6 @@
-<settings>
-    <baudrate>115200</baudrate>
-    <serial>/dev/tty.wchusbserial1410</serial>
-    <lastKnownPosition>
-    	<lat>0.0</lat>
-    	<lon>0.0</lon>
-    </lastKnownPosition>
-</settings>
-
+<group>
+	<scanning>0</scanning>
+	<width>140</width>
+	<height>140</height>
+	<depth>140</depth>
+</group>

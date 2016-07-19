@@ -69,6 +69,29 @@ void ofApp::setup() {
     capture.setup( capms );
     capture.start(true);
     ofAddListener( capture.TIMER_COMPLETE , this, &ofApp::timerScanCallback );
+    
+    bHideUI = true;
+    initUI();
+}
+
+void ofApp::initUI() {
+    // we add this listener before setting up so the initial circle resolution is correct
+//    circleResolution.addListener(this, &ofApp::circleResolutionChanged);
+//    ringButton.addListener(this, &ofApp::ringButtonPressed);
+
+    gui.setup(); // most of the time you don't need a name
+    gui.add(scanning.setup("scanning", false));
+    gui.add(width.setup("width", 140, 10, 300));
+    gui.add(height.setup("height", 140, 10, 300));
+    gui.add(depth.setup("depth", 140, 10, 300));
+    /*
+    gui.add(center.setup("center", ofVec2f(ofGetWidth()*.5, ofGetHeight()*.5), ofVec2f(0, 0), ofVec2f(ofGetWidth(), ofGetHeight())));
+    gui.add(color.setup("color", ofColor(100, 100, 140), ofColor(0, 0), ofColor(255, 255)));
+    gui.add(circleResolution.setup("circle res", 5, 3, 90));
+    gui.add(twoCircles.setup("two circles"));
+    gui.add(ringButton.setup("ring"));
+    gui.add(screenSize.setup("screen size", ofToString(ofGetWidth())+"x"+ofToString(ofGetHeight())));
+    */
 }
 
 void ofApp::timerScanCallback( int &args )
@@ -122,6 +145,42 @@ void ofApp::update() {
 	}
 }
 
+void ofApp::drawBoundingBox() {
+    ofPushMatrix();
+    ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2, 300);
+    ofBoxPrimitive(40,20,40).getMesh().drawWireframe();
+    ofPopMatrix();
+}
+
+void ofApp::drawComments() {
+    // draw instructions
+    ofSetColor(255, 255, 255);
+    stringstream reportStream;
+     
+    if(kinect.hasAccelControl()) {
+        reportStream << "accel is: " << ofToString(kinect.getMksAccel().x, 2) << " / "
+        << ofToString(kinect.getMksAccel().y, 2) << " / "
+        << ofToString(kinect.getMksAccel().z, 2) << endl;
+    } else {
+        reportStream << "Note: this is a newer Xbox Kinect or Kinect For Windows device," << endl
+        << "motor / led / accel controls are not currently supported" << endl << endl;
+    }
+    
+    reportStream << "press p to switch between images and point cloud, rotate the point cloud with the mouse" << endl
+    << "using opencv threshold = " << bThreshWithOpenCV <<" (press spacebar)" << endl
+    << "set near threshold " << nearThreshold << " (press: + -)" << endl
+    << "set far threshold " << farThreshold << " (press: < >) num blobs found " << contourFinder.nBlobs
+    << ", fps: " << ofGetFrameRate() << endl
+    << "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl;
+    
+    if(kinect.hasCamTiltControl()) {
+        reportStream << "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl
+        << "press 1-5 & 0 to change the led mode" << endl;
+    }
+    
+    ofDrawBitmapString(reportStream.str(), 20, 652);
+}
+
 //--------------------------------------------------------------
 void ofApp::draw() {
 	
@@ -144,39 +203,16 @@ void ofApp::draw() {
 //    glEnable(GL_CULL_FACE);
 //    glCullFace(GL_BACK);
     
-    // draw cube
-    ofPushMatrix();
-    ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2, 300);
-    ofBoxPrimitive(40,20,40).getMesh().drawWireframe();
-    ofPopMatrix();
-	
-	// draw instructions
-	ofSetColor(255, 255, 255);
-	stringstream reportStream;
-        
-    if(kinect.hasAccelControl()) {
-        reportStream << "accel is: " << ofToString(kinect.getMksAccel().x, 2) << " / "
-        << ofToString(kinect.getMksAccel().y, 2) << " / "
-        << ofToString(kinect.getMksAccel().z, 2) << endl;
-    } else {
-        reportStream << "Note: this is a newer Xbox Kinect or Kinect For Windows device," << endl
-		<< "motor / led / accel controls are not currently supported" << endl << endl;
-    }
-    
-	reportStream << "press p to switch between images and point cloud, rotate the point cloud with the mouse" << endl
-	<< "using opencv threshold = " << bThreshWithOpenCV <<" (press spacebar)" << endl
-	<< "set near threshold " << nearThreshold << " (press: + -)" << endl
-	<< "set far threshold " << farThreshold << " (press: < >) num blobs found " << contourFinder.nBlobs
-	<< ", fps: " << ofGetFrameRate() << endl
-	<< "press c to close the connection and o to open it again, connection is: " << kinect.isConnected() << endl;
 
-    if(kinect.hasCamTiltControl()) {
-    	reportStream << "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl
-        << "press 1-5 & 0 to change the led mode" << endl;
+    drawBoundingBox();
+
+    // auto draw?
+    // should the gui control hiding?
+    if(!bHideUI){
+        gui.draw();
     }
     
-	ofDrawBitmapString(reportStream.str(), 20, 652);
-    
+    drawComments();
 }
 
 void ofApp::onNewSerialLine(string &line)
@@ -250,7 +286,7 @@ void ofApp::drawPointCloud() {
     
     stringstream ss;
     
-    if(bSavePointCloud) {
+    if(scanning && bSavePointCloud) {
         ss << "mesh-" << setfill('0') << setw(5) << iSaveIndex++ << ".ply";
         mesh.save(ss.str(), true);
         ofLogNotice() << "saved mesh to " << ss.str();
@@ -278,7 +314,11 @@ void ofApp::keyPressed (int key) {
 		case'p':
 			bDrawPointCloud = !bDrawPointCloud;
 			break;
-			
+
+        case'b':
+            bHideUI = !bHideUI;
+            break;
+            
 		case '>':
 		case '.':
 			farThreshold ++;
