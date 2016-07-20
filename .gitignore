@@ -1,3 +1,5 @@
+bin/data/captures/
+bin/data/gui.xml
 bin/data/*.mlp
 bin/data/*.ply
 
