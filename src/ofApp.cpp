@@ -7,7 +7,7 @@ void ofApp::setup() {
     
     ofLogNotice() << "Loading config from settings.xml";
     settings.loadFile("settings.xml");
-
+    
     //ofLogNotice() << ofxLiDAR::getLibLASVersion();
     //recorder.create("lidar.las");
     
@@ -29,6 +29,8 @@ void ofApp::setup() {
 		ofLogNotice() << "zero plane pixel size: " << kinect.getZeroPlanePixelSize() << "mm";
 		ofLogNotice() << "zero plane dist: " << kinect.getZeroPlaneDistance() << "mm";
 	}
+    
+    tele.init();
 	
     string serialdev = settings.getValue("settings:serial", "/dev/tty.wchusbserial1410");
     int baudrate     = settings.getValue("settings:baudrate", 115200);
@@ -40,8 +42,8 @@ void ofApp::setup() {
     }
     serline = "";
     
-    gps.lat = settings.getValue("settings:lastKnownPosition:lat", 0.0);
-    gps.lon = settings.getValue("settings:lastKnownPosition:lon", 0.0);
+    tele.gps.lat = settings.getValue("settings:lastKnownPosition:lat", 0.0);
+    tele.gps.lon = settings.getValue("settings:lastKnownPosition:lon", 0.0);
     
 	colorImg.allocate(kinect.width, kinect.height);
 	grayImage.allocate(kinect.width, kinect.height);
@@ -102,6 +104,12 @@ void ofApp::initUI() {
     gui.add(ringButton.setup("ring"));
     gui.add(screenSize.setup("screen size", ofToString(ofGetWidth())+"x"+ofToString(ofGetHeight())));
     */
+    
+    if( ofFile::doesFileExist("gui.xml", true )) {
+        gui.loadFromFile("gui.xml");
+    } else {
+        ofLogNotice() << "GUI presets file not found, will start with defaults instead.";
+    }
 }
 
 void ofApp::timerScanCallback( int &args )
@@ -200,22 +208,26 @@ void ofApp::drawComments() {
     ofDrawBitmapString(reportStream.str(), 20, 652);
 }
 
+void ofApp::drawLiveKinectFeed() {
+    // draw from the live kinect
+    kinect.drawDepth(10, 10, 400, 300);
+    kinect.draw(420, 10, 400, 300);
+    
+    grayImage.draw(10, 320, 400, 300);
+    contourFinder.draw(10, 320, 400, 300);
+}
+
 //--------------------------------------------------------------
 void ofApp::draw() {
 	
 	ofSetColor(255, 255, 255);
 	
 	if(bDrawPointCloud) {
-		easyCam.begin();
-		drawPointCloud();
-		easyCam.end();
+        easyCam.begin();
+        drawPointCloud();
+        easyCam.end();
 	} else {
-		// draw from the live kinect
-		kinect.drawDepth(10, 10, 400, 300);
-		kinect.draw(420, 10, 400, 300);
-		
-		grayImage.draw(10, 320, 400, 300);
-		contourFinder.draw(10, 320, 400, 300);
+        drawLiveKinectFeed();
     }
 
 //    ofEnableDepthTest();
@@ -230,6 +242,9 @@ void ofApp::draw() {
     if(!bHideUI){
         gui.draw();
     }
+   
+    // display status
+    tele.gps.draw(ofGetWidth() - 40, 8);
     
     drawComments();
 }
@@ -237,41 +252,7 @@ void ofApp::draw() {
 void ofApp::onNewSerialLine(string &line)
 {
 //    ofLogNotice() << "onNewSerialLine, message: " << line << endl;
-
-    vector<string> input = ofSplitString(line, ",");
-    string msgtype = input.at(0);
-    
-    if(msgtype == "GPSL") {
-        if( input.size() == 3) {
-            ofLogNotice() << "GPSL line found";
-            gps.lat = ofToFloat( input.at(1) );
-            gps.lon = ofToFloat( input.at(2) );
-        } else {
-            ofLogNotice() << "ignored GPS reading: " << line;
-        }
-    } else if (msgtype == "GPSQ") {
-        if( input.size() == 4) {
-            ofLogNotice() << "GPSQ line found";
-            gps.fix = ofToInt( input.at(1) );
-            gps.quality = ofToInt( input.at(2) );
-            gps.satelites = ofToInt( input.at(3) );
-        } else {
-            ofLogNotice() << "ignored GPS reading: " << line;
-        }
-    } else if(msgtype == "IMU") {
-        if( input.size() == 4) {
-            imu.yaw = ofToFloat( input.at(1) );
-            imu.pitch = ofToFloat( input.at(2) );
-            imu.roll = ofToFloat( input.at(3) );
-        } else {
-            ofLogNotice() << "rejected IMU reading: " << line;
-        }
-
-//        ofLogNotice() << "IMU line found";
-//        for ( std::vector<std::string>::iterator it=input.begin(); it<input.end(); it++) {
-//            std::cout << ' ' << *it;
-//        }
-    }
+    tele.parse( line );
 }
 
 
@@ -306,15 +287,20 @@ void ofApp::drawPointCloud() {
     stringstream ss;
     
     if(scanning && bSavePointCloud) {
-        ss << "mesh-" << setfill('0') << setw(5) << iSaveIndex++ << ".ply";
-        mesh.save(ss.str(), true);
-        ofLogNotice() << "saved mesh to " << ss.str();
-        bSavePointCloud = false;
+        if( mesh.hasVertices() ) {
+            ss << "mesh-" << setfill('0') << setw(5) << iSaveIndex++ << ".ply";
+            mesh.save(ss.str(), true);
+            ofLogNotice() << "saved mesh to " << ss.str();
+            bSavePointCloud = false;
+        } else {
+            ofLogNotice() << "skipping saving of empty mesh";
+        }
     }
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
+    gui.saveToFile("gui.xml");
 	kinect.setCameraTiltAngle(0); // zero the tilt on exit
 	kinect.close();
 }

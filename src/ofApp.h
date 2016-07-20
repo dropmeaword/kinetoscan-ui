@@ -41,6 +41,7 @@ public:
 	void drawPointCloud();
     void savePointCloud();
     void drawComments();
+    void drawLiveKinectFeed();
     
     void drawBoundingBox();
 	
@@ -71,8 +72,7 @@ public:
 	
 	ofxCvContourFinder contourFinder;
     
-    TeleGPS gps;
-    TeleIMU imu;
+    Telemetry tele;
     
     ofxSimpleTimer capture;
 	
