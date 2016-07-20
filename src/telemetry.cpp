@@ -9,9 +9,15 @@ void TeleGPS::init() {
 void TeleGPS::draw(int xp, int yp) {
     if(fix) {
         white.draw(xp, yp, 32, 32);
+        ofSetColor(255, 255, 255);
     } else {
         red.draw(xp, yp, 32, 32);
+        ofSetColor(255, 0, 0);
     }
+    
+    stringstream ss;
+    ss << "sats: " << satelites;
+    ofDrawBitmapString(ss.str(), xp-20, yp+50);
 }
 
 void Telemetry::init() {
@@ -29,6 +35,8 @@ int Telemetry::parse(string line) {
             ofLogNotice() << "GPSL line found";
             gps.lat = ofToFloat( input.at(1) );
             gps.lon = ofToFloat( input.at(2) );
+            int i = 0;
+            ofNotifyEvent( onGpsCoordinates, i );
         } else {
             ofLogNotice() << "ignored GPS reading: " << line;
         }

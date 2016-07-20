@@ -37,6 +37,7 @@ public:
 	void exit();
 	
     void initUI();
+    void initKinect();
 
 	void drawPointCloud();
     void savePointCloud();
@@ -54,7 +55,6 @@ public:
 	void windowResized(int w, int h);
     
     void onNewSerialLine(string &message);
-    void timerScanCallback( int &args );
     
 	ofxKinect kinect;
     //ofxLiDARRecorder recorder;
@@ -91,6 +91,8 @@ public:
 	int angle;
     
     void cb_button_reset();
+    void cb_timer_scan( int &args );
+    void cb_gps_updated( int &args );
         
     ofxToggle scanning;
     ofxFloatSlider width;

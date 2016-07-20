@@ -28,6 +28,7 @@ struct TeleIMU {
 
 class Telemetry {
 public:
+    ofEvent <int> onGpsCoordinates;
     
     TeleGPS gps;
     TeleIMU imu;
