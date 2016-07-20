@@ -72,6 +72,12 @@ void ofApp::setup() {
     
     bHideUI = true;
     initUI();
+    
+    glEnable(GL_DEPTH_TEST);
+}
+
+void ofApp::cb_button_reset() {
+    ofLogNotice() << "reset bbox pressed";
 }
 
 void ofApp::initUI() {
@@ -79,11 +85,15 @@ void ofApp::initUI() {
 //    circleResolution.addListener(this, &ofApp::circleResolutionChanged);
 //    ringButton.addListener(this, &ofApp::ringButtonPressed);
 
+    resetq.addListener(this, &ofApp::cb_button_reset);
+    
     gui.setup(); // most of the time you don't need a name
     gui.add(scanning.setup("scanning", false));
     gui.add(width.setup("width", 140, 10, 300));
     gui.add(height.setup("height", 140, 10, 300));
     gui.add(depth.setup("depth", 140, 10, 300));
+    gui.add(resetq.setup("reset bbox"));
+
     /*
     gui.add(center.setup("center", ofVec2f(ofGetWidth()*.5, ofGetHeight()*.5), ofVec2f(0, 0), ofVec2f(ofGetWidth(), ofGetHeight())));
     gui.add(color.setup("color", ofColor(100, 100, 140), ofColor(0, 0), ofColor(255, 255)));
@@ -146,9 +156,18 @@ void ofApp::update() {
 }
 
 void ofApp::drawBoundingBox() {
+    ofBoxPrimitive bbox;
+
     ofPushMatrix();
+    ofSetLineWidth(.85);
     ofTranslate(ofGetWidth() / 2, ofGetHeight() / 2, 300);
-    ofBoxPrimitive(40,20,40).getMesh().drawWireframe();
+    ofNoFill();
+    ofDrawBox(0, 0, 0, width, height, depth);
+//    bbox = ofBoxPrimitive(width, height, depth);
+////    bbox.setMode(ofPrimitiveMode::OF_PRIMITIVE_PATCHES);
+//    bbox.setResolution(1);
+//    //box.setMode(ofPrimitiveMode::OF_PRIMITIVE_POINTS);
+//    bbox.getMesh().drawWireframe();
     ofPopMatrix();
 }
 

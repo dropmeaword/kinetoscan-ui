@@ -90,11 +90,14 @@ public:
 	
 	int angle;
     
+    void cb_button_reset();
         
     ofxToggle scanning;
     ofxFloatSlider width;
     ofxFloatSlider height;
     ofxFloatSlider depth;
+    ofxButton resetq;
+
 
 //    ofxColorSlider color;
 //    ofxVec2Slider center;
