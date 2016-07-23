@@ -15,15 +15,15 @@ void ofApp::setup() {
 
     tele.init();
 
-    settings.setValue("serial", "/dev/tty.wchusbserial1410");
-    settings.setValue("baudrate", 115200);
+//    settings.setValue("serial", "/dev/tty.wchusbserial1420");
+//    settings.setValue("baudrate", 115200);
 
-    string serialdev = settings.getValue("serial", "/dev/tty.wchusbserial1410");
+    string serialdev = settings.getValue("serial", "/dev/tty.wchusbserial1420");
     int baudrate     = settings.getValue("baudrate", 115200);
     serial.setup(serialdev, baudrate);
     if(serial.isInitialized()) {
         ofLogNotice() << "Serial was initialized ok, setting callback.";
-        serial.startContinuousRead(false);
+        serial.startContinuousRead(true);
         ofAddListener(serial.NEW_MESSAGE, this, &ofApp::onNewSerialLine);
     }
     serline = "";

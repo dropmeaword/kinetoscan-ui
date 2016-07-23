@@ -25,7 +25,7 @@ void Telemetry::init() {
 }
 
 int Telemetry::parse(string line) {
-    //    ofLogNotice() << "onNewSerialLine, message: " << line << endl;
+    ofLogNotice() << "onNewSerialLine, message: " << line << endl;
     
     vector<string> input = ofSplitString(line, ",");
     string msgtype = input.at(0);
