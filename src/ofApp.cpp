@@ -61,8 +61,13 @@ void ofApp::setup() {
     bHideUI = true;
     initUI();
     
+    cam.setDistance(2000);
+    
     ofAddListener( tele.onGpsCoordinates, this, &ofApp::cb_gps_updated);
 
+    ofLogVerbose() << "Loading sample 3D scan...";
+    mesh.load("rotation.ply");
+    
     glEnable(GL_DEPTH_TEST);
 }
 
@@ -236,25 +241,36 @@ void ofApp::draw() {
     if(scanning) {
         ofBackgroundGradient(ofColor::black, ofColor::red);
     } else {
-        ofBackgroundGradient(ofColor::black, ofColor::gray);
+        ofBackgroundGradient(ofColor::gray, ofColor::white);
     }
 
     ofSetColor(255, 255, 255);
 
+    /*
 	if(bDrawPointCloud) {
-        easyCam.begin();
+        cam.begin();
         drawPointCloud();
-        easyCam.end();
+        drawBoundingBox();
+        cam.end();
 	} else {
         drawLiveKinectFeed();
     }
+     */
+
+    cam.begin();
+        ofPushMatrix();
+            //        ofRotate(180, 0, 1, 1);
+            //          drawPointCloud();
+            mesh.setMode(OF_PRIMITIVE_POINTS);
+            mesh.drawVertices();
+            drawBoundingBox();
+        ofPopMatrix();
+    cam.end();
+
 
 //    ofEnableDepthTest();
 //    glEnable(GL_CULL_FACE);
 //    glCullFace(GL_BACK);
-
-
-    drawBoundingBox();
 
     // auto draw?
     // should the gui control hiding?

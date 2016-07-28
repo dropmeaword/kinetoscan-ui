@@ -110,7 +110,8 @@ public:
     
     ofxPanel gui;
 
+    ofMesh mesh;
 	
 	// used for viewing the point cloud
-	ofEasyCam easyCam;
+	ofEasyCam cam;
 };
