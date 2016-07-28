@@ -1,5 +1,14 @@
 ## Kinetoscan UI
 
+##### 29 July 2016 (Taipei)
+
+Arduino code seem to be working and delivering both IMU and GPS measurements. 
+Each measurement is obtained using a different request character though at the 
+moment ofxSimpleSerial only send 'r' as request char. 
+
+I can implement the dispatching of IMU/GPS messages in at least two ways:
+1. in the arduino, every time I get 'r' I keep a state in the arduino to know which measurement I have to send back.
+2. in the UI code, alternate between sending 'r', and 'g' and 'q'.
 
 
 ### Working with the scan ###

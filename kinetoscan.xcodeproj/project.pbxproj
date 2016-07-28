@@ -20,6 +20,7 @@
 		49BEEB2DFA5319D55AA6899F /* tilt.c in Sources */ = {isa = PBXBuildFile; fileRef = BF2F2AA872288D30F53983EF /* tilt.c */; };
 		4ADB88E2FB52E76A471065DE /* ofxOscParameterSync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0AED834CE4DEC5260AF302A2 /* ofxOscParameterSync.cpp */; };
 		510CAFE035E576A4E1502D52 /* UdpSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E6DEF695B88BA5FAACEAA937 /* UdpSocket.cpp */; };
+		53D665FC1D4A75E1003E0F44 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 53D665FB1D4A75E1003E0F44 /* README.md */; };
 		53E492861D4A667E00641364 /* ofxLogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53E492481D4A667D00641364 /* ofxLogger.cpp */; };
 		53E492901D4A667E00641364 /* ofxSimpleSerial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53E4926E1D4A667D00641364 /* ofxSimpleSerial.cpp */; };
 		53E492941D4A667E00641364 /* ofxSimpleTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 53E492801D4A667E00641364 /* ofxSimpleTimer.cpp */; };
@@ -165,6 +166,7 @@
 		5105862F1606831E9239FEAF /* simd_functions.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = simd_functions.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/simd_functions.hpp; sourceTree = SOURCE_ROOT; };
 		516717F84C0146512C47A3EC /* ofxCvHaarFinder.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxCvHaarFinder.h; path = ../../../addons/ofxOpenCv/src/ofxCvHaarFinder.h; sourceTree = SOURCE_ROOT; };
 		52AFA1F08C420992CAAAE648 /* ofxSlider.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxSlider.h; path = ../../../addons/ofxGui/src/ofxSlider.h; sourceTree = SOURCE_ROOT; };
+		53D665FB1D4A75E1003E0F44 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		53E492481D4A667D00641364 /* ofxLogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxLogger.cpp; sourceTree = "<group>"; };
 		53E492491D4A667D00641364 /* ofxLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxLogger.h; sourceTree = "<group>"; };
 		53E4926E1D4A667D00641364 /* ofxSimpleSerial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSimpleSerial.cpp; sourceTree = "<group>"; };
@@ -1036,6 +1038,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				53D665FB1D4A75E1003E0F44 /* README.md */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
@@ -1255,6 +1258,7 @@
 				ACE7DC9A3223ED5EE1B80074 /* cameras.c in Sources */,
 				F4135EEFC911E9ED211FB6F9 /* core.c in Sources */,
 				53E492901D4A667E00641364 /* ofxSimpleSerial.cpp in Sources */,
+				53D665FC1D4A75E1003E0F44 /* README.md in Sources */,
 				E55DEEF784A10419E444669E /* flags.c in Sources */,
 				21A059755481CC0BF969FD2D /* keep_alive.c in Sources */,
 				FCC16AB16073FF0581F50ED7 /* loader.c in Sources */,
