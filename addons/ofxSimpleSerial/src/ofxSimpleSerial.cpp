@@ -26,7 +26,7 @@ void ofxSimpleSerial::stopContinuousRead() {
 */
 void ofxSimpleSerial::sendRequest()
 {
-    if (bWriteByte) { writeByte('R'); writeByte(8); }
+	if (bWriteByte) writeByte('R');
 	ofAddListener(ofEvents().update, this, &ofxSimpleSerial::update);
 }
 
@@ -58,7 +58,7 @@ void ofxSimpleSerial::read()
 				messageBuffer = "";
 				ofRemoveListener(ofEvents().update, this, &ofxSimpleSerial::update);
 				ofNotifyEvent(NEW_MESSAGE, message, this);
-                flush();
+
 				break;
 			}
 			else
