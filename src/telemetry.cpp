@@ -25,7 +25,7 @@ void Telemetry::init() {
 }
 
 int Telemetry::parse(string line) {
-    ofLogNotice() << "onNewSerialLine, message: " << line << endl;
+    //ofLogNotice() << "onNewSerialLine, message: " << line << endl;
     
     vector<string> input = ofSplitString(line, ",");
     string msgtype = input.at(0);
@@ -50,10 +50,15 @@ int Telemetry::parse(string line) {
             ofLogNotice() << "ignored GPS reading: " << line;
         }
     } else if(msgtype == "IMU") {
-        if( input.size() == 4) {
-            imu.yaw = ofToFloat( input.at(1) );
-            imu.pitch = ofToFloat( input.at(2) );
-            imu.roll = ofToFloat( input.at(3) );
+        if( input.size() == 5) {
+//            imu.yaw = ofToFloat( input.at(1) );
+//            imu.pitch = ofToFloat( input.at(2) );
+//            imu.roll = ofToFloat( input.at(3) );
+            float ix = ofToFloat( input.at(1) );
+            float iy = ofToFloat( input.at(2) );
+            float iz = ofToFloat( input.at(3) );
+            float iw = ofToFloat( input.at(4) );
+            imu.q.set(ix, iy, iz, iw);
         } else {
             ofLogNotice() << "rejected IMU reading: " << line;
         }

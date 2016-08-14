@@ -237,7 +237,9 @@ void ofApp::drawLiveKinectFeed() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-
+    ofVec3f qaxis;
+    float qangle;
+    
     if(scanning) {
         ofBackgroundGradient(ofColor::black, ofColor::red);
     } else {
@@ -257,8 +259,10 @@ void ofApp::draw() {
     }
      */
 
+    tele.imu.q.getRotate(qangle, qaxis);
     cam.begin();
         ofPushMatrix();
+            ofRotate(qangle, qaxis.x, qaxis.y, qaxis.z);
             //        ofRotate(180, 0, 1, 1);
             //          drawPointCloud();
             mesh.setMode(OF_PRIMITIVE_POINTS);
