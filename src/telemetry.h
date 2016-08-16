@@ -33,8 +33,12 @@ public:
     TeleGPS gps;
     TeleIMU imu;
     
+    ofQuaternion zeroq; /// zero 'home' position for rotational quaternion
+    
     void init();
     int parse(string line);
+    
+    void reset();
 };
 
 

@@ -20,6 +20,11 @@ void TeleGPS::draw(int xp, int yp) {
     ofDrawBitmapString(ss.str(), xp-20, yp+50);
 }
 
+void Telemetry::reset() {
+    /// the zero position of our sensor is the conjugate of the positional quaternion
+    zeroq = imu.q.conj();
+}
+
 void Telemetry::init() {
     gps.init();
 }
