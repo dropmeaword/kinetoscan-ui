@@ -99,6 +99,8 @@ public:
     ofxFloatSlider height;
     ofxFloatSlider depth;
     ofxButton resetq;
+    
+    string saveDir;
 
 
 //    ofxColorSlider color;

@@ -51,7 +51,19 @@ void ofApp::setup() {
     bSavePointCloud = false;
 
     iSaveIndex = 0;
+    
+    // find place to save the scan and if it doesn't exist create it
+    saveDir = ofGetTimestampString("%Y%m%d.%H%M%S");
+    saveDir = "captures/"+saveDir;
 
+    if( ofDirectory::doesDirectoryExist(saveDir, true) ) {
+        ofLogNotice() << "capture directory already exists you might be overwriting a previous scan [" << saveDir << "]";
+    } else {
+        ofLogNotice() << "Creating capture directory " << saveDir << " [...]";
+        ofDirectory::createDirectory(saveDir, true);
+    }
+    
+    // start capture timer
     int capms = 1000 / SCAN_FREQUENCY_HZ;
     ofLogNotice() << "Capturing a 3D scan every " << capms << "ms";
     capture.setup( capms );
@@ -74,6 +86,7 @@ void ofApp::setup() {
 void ofApp::cb_button_reset() {
     ofLogNotice() << "reset bbox pressed";
     // ofDirectory::createDirectory()
+    tele.reset();
 }
 
 void ofApp::cb_gps_updated(int &args) {
@@ -285,7 +298,7 @@ void ofApp::draw() {
     // display status
     tele.gps.draw(ofGetWidth() - 40, 8);
 
-    drawComments();
+    //drawComments();
 }
 
 void ofApp::onNewSerialLine(string &line)
@@ -327,7 +340,8 @@ void ofApp::drawPointCloud() {
 
     if(scanning && bSavePointCloud) {
         if( mesh.hasVertices() ) {
-            ss << "mesh-" << setfill('0') << setw(5) << iSaveIndex++ << ".ply";
+//            ss << "mesh-" << setfill('0') << setw(5) << iSaveIndex++ << ".ply";
+            ss << saveDir << "/" << "mesh-" << setfill('0') << setw(5) << iSaveIndex++ << ".ply";
             mesh.save(ss.str(), true);
             ofLogNotice() << "saved mesh to " << ss.str();
             bSavePointCloud = false;
